@@ -11,14 +11,15 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
 // we will start writing the selenium code here afterwards we will convert it into framework standards.
 
 public class Standalone {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		// TODO Auto-generated method stub
-		
+		String name = "ZARA COAT 3";
 		WebDriver driver = new ChromeDriver();
 		
 		driver.get("https://rahulshettyacademy.com/client");
@@ -35,7 +36,7 @@ public class Standalone {
 		List<WebElement> products = driver.findElements(By.cssSelector(".mb-3"));
 		
 		//find "ZARA COAT 3" from list and add it into cart
-		List<WebElement> zara = products.stream().filter(s->s.getText().contains("ZARA")).collect(Collectors.toList());
+		List<WebElement> zara = products.stream().filter(s->s.getText().contains(name)).collect(Collectors.toList());
 		
 		zara.stream().forEach(s->System.out.println(s.getText()));
 		
@@ -54,7 +55,17 @@ public class Standalone {
 		w.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#toast-container")));
 		
 		//verifying the Item in Cart
+		Thread.sleep(3000);
+//		w.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("button[routerlink='/dashboard/cart']")));
 		driver.findElement(By.cssSelector("button[routerlink='/dashboard/cart']")).click();
+		
+		//Collect all the items available in the cart and check if Zara coat is present.
+		List<WebElement> cartItem =  driver.findElements(By.cssSelector("div[class = 'cartSection'] h3"));
+		boolean item =  cartItem.stream().anyMatch(s->s.getText().equalsIgnoreCase(name));
+		Assert.assertTrue(item);
+		
+		//clicking on checkout button
+		driver.findElement(By.cssSelector(".totalRow button")).click();
 		
 	}
 
