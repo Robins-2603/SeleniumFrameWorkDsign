@@ -13,24 +13,29 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
+import rahulshettyAcademy.PageObjectModel.Landingpage;
+
 // we will start writing the selenium code here afterwards we will convert it into framework standards.
 
 public class Standalone {
 
 	public static void main(String[] args) throws InterruptedException {
 		// TODO Auto-generated method stub
+		
 		String name = "ZARA COAT 3";
 		WebDriver driver = new ChromeDriver();
+		Landingpage landing = new Landingpage(driver);
 		
-		driver.get("https://rahulshettyacademy.com/client");
-		driver.manage().window().maximize();
+		
+		landing.goTo("https://rahulshettyacademy.com/client");
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
 		
 		//Logging in to website
 		
-		driver.findElement(By.id("userEmail")).sendKeys("robinsforwork@gmail.com");
-		driver.findElement(By.id("userPassword")).sendKeys("Robin$2603");
-		driver.findElement(By.cssSelector("#login")).click();
+		landing.enterDetails("robinsforwork@gmail.com", "Robin$2603");
+		
+		
+	
 		
 		// Grabbing all the items 
 		List<WebElement> products = driver.findElements(By.cssSelector(".mb-3"));
@@ -66,6 +71,13 @@ public class Standalone {
 		
 		//clicking on checkout button
 		driver.findElement(By.cssSelector(".totalRow button")).click();
+		
+		//Handelling  Auto suggestive dropDown 
+		driver.findElement(By.cssSelector("input[placeholder='Select Country']")).sendKeys("ind");
+		List<WebElement> autoSuggestive = driver.findElements(By.xpath("//section/button"));
+		
+		autoSuggestive.stream().filter(s->s.getText().equalsIgnoreCase("india")).forEach(s->s.click());
+		
 		
 	}
 
